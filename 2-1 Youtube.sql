@@ -1,0 +1,4 @@
+
+DROP DATABASE IF EXISTS youtube;
+CREATE DATABASE youtube CHARACTER SET utf8mb4;
+USE youtube;
