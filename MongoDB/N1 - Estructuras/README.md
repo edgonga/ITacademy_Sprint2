@@ -1,1 +1,1 @@
-diagramaw 
+diagrama 
