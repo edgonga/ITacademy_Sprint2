@@ -28,7 +28,7 @@ db.createCollection("Optica", {
                                     bsonType: "number"
                                 },
                                 puerta: {
-                                    bsonType: "number"
+                                    bsonType: "string"
                                 },
                                 ciudad: {
                                     bsonType: "string"
@@ -48,7 +48,7 @@ db.createCollection("Optica", {
                             bsonType: "string"
                         },
                         NIF: {
-                            bsonType: "number"
+                            bsonType: "string"
                         }
                     }
                 },
@@ -144,18 +144,18 @@ db.Optica.insertOne({
             "piso": 1,
             "puerta": "2B",
             "ciudad": "Madrid",
-            "CP": "28001",
+            "CP": 28001,
             "pais": "España"
         },
-        "telefono": "+34 912 345 678",
+        "telefono": 912345678,
         "fax": "fax",
         "NIF": "A12345678"
     },
     "gafa": {
         "marca": "Marca 1",
         "graduacion": {
-            "cristal derecho": "+2.50",
-            "cristal izquierdo": "+2.00"
+            "cristal derecho": 2,
+            "cristal izquierdo": 2
         },
         "montura": {
             "tipo": "Completa",
@@ -165,12 +165,12 @@ db.Optica.insertOne({
             "color_derecho": "Gris",
             "color_izquierdo": "Gris"
         },
-        "precio": 100.00
+        "precio": 100
     },
     "cliente": {
         "nombre": "Cliente 1",
         "direccion": "Calle del Cliente 1, 456, 3ºA, Madrid, 28002, España",
-        "telefono": "+34 612 345 678",
+        "telefono": 612345678,
         "correo_electronico": "cliente1@example.com",
         "fecha_registro": new Date("2023-04-11"),
         "recomendacion": "Amigo",
