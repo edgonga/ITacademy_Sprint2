@@ -34,7 +34,7 @@ db.createCollection("Optica", {
                                     bsonType: "string"
                                 },
                                 CP: {
-                                    bsonType: "number"
+                                    bsonType: "string", "pattern": "^[0-9]{5}$"
                                 },
                                 pais: {
                                     bsonType: "string"
@@ -42,7 +42,7 @@ db.createCollection("Optica", {
                             }
                         },
                         telefono: {
-                            bsonType: "number"
+                            bsonType: "string", "pattern": "^[0-9]{9}$"
                         },
                         fax: {
                             bsonType: "string"
@@ -102,7 +102,7 @@ db.createCollection("Optica", {
                 },
                 cliente: {
                     bsonType: "object",
-                    required: ["nombre", "direccion", "telefono", "correo_electronico", "fecha_registro", "vendedor"],
+                    required: ["nombre", "telefono", "correo_electronico", "fecha_registro", "vendedor"],
                     properties: {
                         nombre: {
                             bsonType: "string"
@@ -135,45 +135,45 @@ db.createCollection("Optica", {
 
 
 db.Optica.insertOne({
-    "id_gafas": "G001",
-    "proveedor": {
-        "nombre": "Proveedor 1",
-        "direccion": {
-            "calle": "Calle del Proveedor 1",
-            "numero": 123,
-            "piso": 1,
-            "puerta": "2B",
-            "ciudad": "Madrid",
-            "CP": 28001,
-            "pais": "España"
+    id_gafas: "G001",
+    proveedor: {
+        nombre: "Proveedor 1",
+        direccion: {
+            calle: "Calle del Proveedor 1",
+            numero: 123,
+            piso: 1,
+            puerta: "2B",
+            ciudad: "Madrid",
+            CP: 28001,
+            pais: "España"
         },
-        "telefono": 912345678,
-        "fax": "fax",
-        "NIF": "A12345678"
+        telefono: 912345678,
+        fax: "fax",
+        NIF: "A12345678"
     },
-    "gafa": {
-        "marca": "Marca 1",
-        "graduacion": {
-            "cristal derecho": 2,
-            "cristal izquierdo": 2
+    gafa: {
+        marca: "Marca 1",
+        graduacion: {
+            cristal_derecho: 2,
+            cristal_izquierdo: 2
         },
-        "montura": {
-            "tipo": "Completa",
-            "color": "Negro"
+        montura: {
+            tipo: "Completa",
+            color: "Negro"
         },
-        "color_cristal": {
-            "color_derecho": "Gris",
-            "color_izquierdo": "Gris"
+        color_cristal: {
+            color_derecho: "Gris",
+            color_izquierdo: "Gris"
         },
-        "precio": 100
+        precio: 100
     },
-    "cliente": {
-        "nombre": "Cliente 1",
-        "direccion": "Calle del Cliente 1, 456, 3ºA, Madrid, 28002, España",
-        "telefono": 612345678,
-        "correo_electronico": "cliente1@example.com",
-        "fecha_registro": new Date("2023-04-11"),
-        "recomendacion": "Amigo",
-        "vendedor": "Luis Amador"
+    cliente: {
+        nombre: "Cliente 1",
+        direccion: "Calle del Cliente 1, 456, 3ºA, Madrid, 28002, España",
+        telefono: 612345678,
+        correo_electronico: "cliente1@example.com",
+        fecha_registro: new Date("2023-04-11"),
+        recomendacion: "Amigo",
+        vendedor: "Luis Amador"
     }
 })
