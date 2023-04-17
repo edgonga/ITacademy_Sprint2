@@ -5,7 +5,7 @@ db.createCollection("Optica", {
             required: ["id_gafas", "proveedor", "gafa", "cliente"],
             properties: {
                 id_gafas: {
-                    bsonType: "number"
+                    bsonType: "string"
                 },
                 proveedor: {
                     bsonType: "object",
@@ -108,8 +108,7 @@ db.createCollection("Optica", {
                             bsonType: "string"
                         },
                         direccion: {
-                            bsonType: "object",
-
+                            bsonType: "string"
                         },
                         telefono: {
                             bsonType: "number"
@@ -144,10 +143,10 @@ db.Optica.insertOne({
             piso: 1,
             puerta: "2B",
             ciudad: "Madrid",
-            CP: 28001,
+            CP: "28001",
             pais: "España"
         },
-        telefono: 912345678,
+        telefono: "912345678",
         fax: "fax",
         NIF: "A12345678"
     },

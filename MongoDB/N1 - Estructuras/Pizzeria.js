@@ -5,7 +5,7 @@ db.createCollection("Pizzeria", {
             required: ["id_pedido", "Cliente", "Pedido", "Tienda"],
             properties: {
                 id_pedido: {
-                    bsonType: "int", "minimum": 1
+                    bsonType: "number"
                 },
                 Cliente: {
                     bsonType: "object",
@@ -28,7 +28,6 @@ db.createCollection("Pizzeria", {
                         ParaLlevar: { bsonType: "bool" },
                         Comida: {
                             bsonType: "object",
-                            required: ["Pizza", "Hamburguesa", "Bebida"],
                             properties: {
                                 Pizza: {
                                     bsonType: "object",
@@ -36,8 +35,8 @@ db.createCollection("Pizzeria", {
                                         NombrePizza: { bsonType: "string" },
                                         Descripcion: { bsonType: "string" },
                                         Imagen: { bsonType: "string" },
-                                        PrecioUnitario: { bsonType: "decimal" },
-                                        Cantidad: { bsonType: "int" },
+                                        PrecioUnitario: { bsonType: "number" },
+                                        Cantidad: { bsonType: "number" },
                                         CategoriaPizza: { bsonType: "string" }
                                     }
                                 },
@@ -47,28 +46,10 @@ db.createCollection("Pizzeria", {
                                         NombreHamburguesa: { bsonType: "string" },
                                         Descripcion: { bsonType: "string" },
                                         Imagen: { bsonType: "string" },
-                                        PrecioUnitario: { bsonType: "decimal" },
-                                        Cantidad: { bsonType: "int" }
+                                        PrecioUnitario: { bsonType: "number" },
+                                        Cantidad: { bsonType: "number" }
                                     },
-                                    allOf: [   // Intentaremos validar que si el subdocumento Hamburguesa está presente,
-                                               // solo entonces, los campos NombreHamburguesa, PrecioUnitario y Cantidad
-                                               // serán obligatorios. No obstante, como el cliente puede ser que haga un pedido
-                                               // dónde no pida ninguna Hamburguesa, éste subdocumento no será obligatorio
-                                               // Solo lo aplicaremos a las Hamburguesas para comprobar que funciona correctamente,
-                                               
-                                        {
-                                            $or: [
-                                                { Hamburguesa: { $exists: false } },
-                                                {
-                                                    $and: [
-                                                        { 'Hamburguesa.NombreHamburguesa': { $exists: true } },
-                                                        { 'Hamburguesa.PrecioUnitario': { $exists: true } },
-                                                        { 'Hamburguesa.Cantidad': { $exists: true } }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                    
                                 },
                                 Bebida: {
                                     bsonType: "object",
@@ -76,30 +57,14 @@ db.createCollection("Pizzeria", {
                                         NombreBebida: { bsonType: "string" },
                                         Descripcion: { bsonType: "string" },
                                         Imagen: { bsonType: "string" },
-                                        PrecioUnitario: { bsonType: "decimal" },
-                                        Cantidad: { bsonType: "int" }
+                                        PrecioUnitario: { bsonType: "number" },
+                                        Cantidad: { bsonType: "number" }
                                     }
                                 }
                             }
                         },
                         PrecioTotal: {
-                            bsonType: "decimal",
-                            readOnly: true, // Para que no se pueda modificar manualmente
-                            expression: {   // Intentamos que este campo se calcule directamente como la suma del producto de 
-                                $sum: {     // PrecioUnitario * Cantidad para Bebida, Pizza y Hamburguesas
-                                    $map: {
-                                        input: {
-                                            $objectToArray: $Comida
-                                        },
-                                        in: {
-                                            $multiply: [$$this.v.PrecioUnitario, $$this.v.Cantidad]
-                                            // Al aplicar $objectToArray convertimos en un array clave (k) valor (v) el objecto Comida
-                                            // de tal manera que al hacer $$this.v.PrecioUnitario estamos haciendo referencia al valor (precio unitario)
-                                            // de la comida en cuestión y $$this.v.Cantidad al valor (la cantidad) de la comida en cuestión
-                                        }
-                                    }
-                                }
-                            }
+                            bsonType: "number"
                         }
                     }
                 },
@@ -121,7 +86,7 @@ db.createCollection("Pizzeria", {
                         },
                         Trabajadores: {
                             bsonType: "object",
-                            required: ["NombreTrabajador", "ApellidoTrabajador", "NIF", "Telefono", "Repartidor", "HoraReparto"],
+                            required: ["NombreTrabajador", "ApellidoTrabajador", "NIF", "TelefonoTrabajador", "Repartidor"],
                             properties: {
                                 NombreTrabajador: {
                                     bsonType: "string"
@@ -132,7 +97,7 @@ db.createCollection("Pizzeria", {
                                 NIF: {
                                     bsonType: "string"
                                 },
-                                TelefonoCliente: {
+                                TelefonoTrabajador: {
                                     bsonType: "string", "pattern": "^[0-9]{9}$"
                                 },
                                 Repartidor: {
@@ -150,7 +115,7 @@ db.createCollection("Pizzeria", {
     }
 })
 
-db.Optica.insertOne({
+db.Pizzeria.insertOne({
     id_pedido: 1234,
     Cliente: {
         NombreCliente: "Juan",
@@ -169,7 +134,7 @@ db.Optica.insertOne({
                 NombrePizza: "Margarita",
                 Descripcion: "Tomate, mozzarella y albahaca",
                 Imagen: "https://miimagen.com/margarita.jpg",
-                PrecioUnitario: 8.5,
+                PrecioUnitario: 8,
                 Cantidad: 2,
                 CategoriaPizza: "Clásica"
             },
@@ -195,23 +160,13 @@ db.Optica.insertOne({
         CP: "28001",
         Localidad: "Madrid",
         Provincia: "Madrid",
-        Trabajadores: [
-            {
-                NombreTrabajador: "María",
-                ApellidoTrabajador: "García",
-                NIF: "12345678A",
-                Telefono: "911111111",
-                Repartidor: true,
-                HoraReparto: new Date("2023-04-13T20:00:00Z")
-            },
+        Trabajadores: 
             {
                 NombreTrabajador: "Pedro",
                 ApellidoTrabajador: "Martínez",
                 NIF: "87654321B",
-                Telefono: "922222222",
+                TelefonoTrabajador: "922222222",
                 Repartidor: false
             }
-        ]
     }
 })
-
