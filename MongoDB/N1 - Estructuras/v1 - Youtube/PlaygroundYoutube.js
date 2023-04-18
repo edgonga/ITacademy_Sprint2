@@ -12,7 +12,8 @@ db.createCollection("Youtube", {
                     required: ["Email", "Password", "Nombre", "FechaNacimiento"],
                     properties: {
                         Email: {
-                            bsonType: "string"
+                            bsonType: "string",
+                            pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
                         },
                         Password: {
                             bsonType: "string"
