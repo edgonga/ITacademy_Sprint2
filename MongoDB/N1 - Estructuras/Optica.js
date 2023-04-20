@@ -202,6 +202,7 @@ client.connect()
         console.log("Script finalizado");
     })
     .catch((err) => {
+        client.close()
         console.dir(err)
     })
 

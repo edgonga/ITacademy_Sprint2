@@ -1,4 +1,4 @@
-db.createCollection("Pizzeria", {
+const schema = {
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -113,9 +113,9 @@ db.createCollection("Pizzeria", {
             }
         }
     }
-})
+}
 
-db.Pizzeria.insertOne({
+const pizzeriaData = {
     id_pedido: 1234,
     Cliente: {
         NombreCliente: "Juan",
@@ -124,7 +124,7 @@ db.Pizzeria.insertOne({
         CP: "28001",
         Localidad: "Madrid",
         Provincia: "Madrid",
-        TelefonoCliente: "910000000"
+        TelefonoCliente: "9100000001"
     },
     Pedido: {
         Fecha: new Date("2023-04-13"),
@@ -169,4 +169,34 @@ db.Pizzeria.insertOne({
                 Repartidor: false
             }
     }
-})
+}
+
+const { MongoClient } = require('mongodb')
+
+const url = "mongodb+srv://RestoConnection:1edgOnga1123@cluster0.2nrtxap.mongodb.net/test"
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true })
+const dbPizzeria = "test"
+const collectionPizzeria = "Pizzeria"
+
+client.connect()
+    .then(() => {
+        console.log(`Se ha conectado correctamente a la bbdd ${dbPizzeria}`)
+        const collection = client.db(dbPizzeria).createCollection(collectionPizzeria, schema)
+        return collection.then((collection) => {
+            return collection.insertOne(pizzeriaData)
+            .then(() => {
+                console.log(`Se ha creado correctamente la colección ${collectionPizzeria} en la bbdd ${dbPizzeria}`)
+            })
+            .catch((err) => {
+                console.error(`------------> ${err}`);
+            })
+        })
+    })
+    .then(() => {
+        client.close()
+        console.log("Script finalizado");
+    })
+    .catch((err) => {
+        client.close()
+        console.error(`..................... ${err}`)
+    })

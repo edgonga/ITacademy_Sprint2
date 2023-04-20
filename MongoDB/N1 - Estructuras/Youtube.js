@@ -1,4 +1,6 @@
-db.createCollection("Usuario", {
+const { ObjectId } = require('mongodb')
+
+const schemaUsuario = {
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -134,10 +136,10 @@ db.createCollection("Usuario", {
             }
         }
     }
-})
+}
 
-db.Usuario.insertOne({
-    UsuarioID: ObjectId("012345678901012345678901"),
+const youtubeUsuarioData = {
+    UsuarioID: new ObjectId("012345678901012345678901"),
     PropiedadesUsuario: {
         Email: "ejemplo@ejemplo.com",
         Password: "123456",
@@ -167,10 +169,42 @@ db.Usuario.insertOne({
         Video: "Video de Prueba",
         FechaCreacion: new Date("2023-05-07"),
         Estado: "publico"
-    },
-})
+    }
+}
 
-db.createCollection("Video", {
+const { MongoClient } = require('mongodb')
+
+const url = "mongodb+srv://RestoConnection:1edgOnga1123@cluster0.2nrtxap.mongodb.net/test"
+const clientUser = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true })
+const dbYoutube = "test"
+const collectionUsuario = "Usuario"
+const collectionVideo = "Video"
+
+
+// clientUser.connect()
+//     .then(() => {
+//         console.log(`Se ha conectado correctamente a la bbdd ${dbYoutube}`)
+//         const collection = clientUser.db(dbYoutube).createCollection(collectionUsuario, schemaUsuario)
+//         return collection.then((collection) => {
+//             return collection.insertOne(youtubeUsuarioData)
+//             .then(() => {
+//                 console.log(`Se ha creado la colección ${collectionUsuario} en la bbdd ${dbYoutube}`);
+//             })
+//             .catch((err) => {
+//                 console.error(err)
+//             })
+//         })
+//     })
+//     .then(() => {
+//         console.log(`Script finalizado para ${collectionUsuario}`)
+//         clientUser.close()
+//     })
+//     .catch((err) => {
+//         console.error(err)
+//         clientUser.close()
+//     })
+
+const videoSchema = {
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -306,9 +340,9 @@ db.createCollection("Video", {
             }
         }
     }
-})
+}
 
-db.Video.insertOne({
+const videoData = {
     VideoID: new ObjectId("012345678901012345678901"),
     PropiedadesVideo: {
         Titulo: "Título de Ejemplo",
@@ -351,4 +385,30 @@ db.Video.insertOne({
             HoraCreacion: new Date("2018-12-11")
         }
     }
-})
+}
+
+const clientVideo = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true })
+
+clientVideo.connect()
+    .then(() => {
+        console.log(`Se ha conectado correctamente a la bbdd ${dbYoutube}`)
+        const collection = clientVideo.db(dbYoutube).createCollection(collectionVideo, videoSchema)
+        return collection.then((collection) => {
+            return collection.insertOne(videoData)
+            .then(() => {
+                console.log(`Se ha creado correctamente la colección ${collectionVideo} en la bbdd ${dbYoutube}`)
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+        })
+    })
+    .then(() => {
+        console.log("Script finalizado")
+        clientVideo.close()
+    })
+    .catch((err) => {
+        console.error(err)
+        clientVideo.close()
+    })
+
