@@ -62,17 +62,39 @@ CREATE TABLE venedor (
 INSERT INTO Proveidor (NIF, nom, telefon, carrer, numero, pis, porta, ciutat, codi_postal, pais, fax)
 VALUES ('12345678A', 'Proveidor1', '123456789', 'Carrer del Proveidor1', 1, NULL, NULL, 'Barcelona', '08001', 'Espanya', '123456789');
 
+INSERT INTO Proveidor (NIF, nom, telefon, carrer, numero, pis, porta, ciutat, codi_postal, pais, fax)
+VALUES ('12343338A', 'Proveidor2', '222456789', 'Avenida del Proveidor2', 1, NULL, NULL, 'Barcelona', '08001', 'Espanya', '1ff456789');
+
 -- Inserción para la tabla Ulleres
 INSERT INTO Ulleres (id, marca, proveidor, graduacio_esq, graduacio_dr, tipus_muntura, color_muntura, color_vidre_esq, color_vidre_dr, preu, client, data_venta, en_stock, venedor)
-VALUES (1, 'Marca1', 'Proveidor1', -1.25, -1.5, 'flotant', 'Negre', 'Transparent', 'Transparent', 120.50, 1, '2022-03-15', TRUE, 1);
+VALUES (1, 'Marca1', 'Proveidor1', -1.25, -1.5, 'flotant', 'Negre', 'Transparent', 'Transparent', 120.50, 1, '2023-03-15', TRUE, 1);
+
+INSERT INTO Ulleres (id, marca, proveidor, graduacio_esq, graduacio_dr, tipus_muntura, color_muntura, color_vidre_esq, color_vidre_dr, preu, client, data_venta, en_stock, venedor)
+VALUES (2, 'Marca1', 'Proveidor1', -1, -1.5, 'flotant', 'Negre', 'Semitransparent', 'Semitransparent', 100.50, 2, '2022-03-15', TRUE, 2);
 
 -- Inserción para la tabla Client
 INSERT INTO Client (id, nom, domicili, telefon, email, data_registre, id_recomanacio)
 VALUES (1, 'Client1', 'Carrer del Client1', '987654321', 'client1@example.com', '2022-03-15', NULL);
 
+INSERT INTO Client (id, nom, domicili, telefon, email, data_registre, id_recomanacio)
+VALUES (2, 'Client2', 'Carrer del Client2', '977654321', 'client2@example.com', '2022-03-15', NULL);
+
 -- Inserción para la tabla venedor
 INSERT INTO venedor (id, nom, despedit)
 VALUES (1, 'Venedor1', FALSE);
 
+INSERT INTO venedor (id, nom, despedit)
+VALUES (2, 'Venedor2', FALSE);
+
 -- Lista el total de compras de un cliente
-SELECT 
+SELECT * FROM Client;
+
+-- Lista las diferentes gafas que ha vendido un empleado durante un año.
+SELECT V.id, V.nom, G.id, G.marca, G.proveidor, G.client 
+FROM venedor AS V 
+INNER JOIN Ulleres AS G ON V.id = G.venedor
+WHERE YEAR(data_venta) = 2022
+
+-- Lista los diferentes proveedores que han suministrado gafas vendidas con exito por la óptica
+SELECT proveidor, id AS "ID Gafa", marca
+FROM Ulleres
